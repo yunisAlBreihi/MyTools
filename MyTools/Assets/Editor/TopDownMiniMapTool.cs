@@ -48,7 +48,7 @@ public class TopDownMiniMapTool : EditorWindow
     private const string uiRibbonName = "GV Gizmo DropDown";
 
     //Misc variables
-    float oldScale = 0.0f;
+    private float oldScale = 0.0f;
     #endregion Variables
 
     #region Construction
