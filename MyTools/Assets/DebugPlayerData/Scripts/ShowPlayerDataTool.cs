@@ -6,14 +6,14 @@ using System.IO;
 
 public class ShowPlayerDataTool : EditorWindow
 {
-    public PlayerSave player;
+    private List<DebugLine> debugLines = new List<DebugLine>();
+    private List<string> jsonFiles = new List<string>();
+    private DataHolder currentData = null;
+    private GameObject debugLinePrefab = null;
+    private string jsonPath = "";
+    private string currentFile = "";
 
-    private Vector3 playerStartPosition;
-    private Vector3 playerPosition;
-
-    private PlayerData playerData;
-    private string jsonFile;
-    private string jsonPath;
+    private Rect buttonRect = new Rect(0,0,100,20);
 
     [MenuItem("Tools/ShowPlayerData")]
     static void Init() 
@@ -24,9 +24,7 @@ public class ShowPlayerDataTool : EditorWindow
 
     private void OnEnable()
     {
-        jsonPath = Application.dataPath + "/debugStats.json";
-        player = FindObjectOfType<PlayerSave>();
-        InitiatePlayer();
+        debugLinePrefab = (GameObject)Resources.Load("DebugLine", typeof(GameObject));
 
         SceneView.duringSceneGui += SceneGUI;
     }
@@ -34,16 +32,66 @@ public class ShowPlayerDataTool : EditorWindow
     private void OnDisable()
     {
         SceneView.duringSceneGui -= SceneGUI;
+        foreach (var debugLine in debugLines)
+        {
+            DestroyImmediate(debugLine.gameObject);
+        }
+        Resources.UnloadUnusedAssets();
     }
 
     private void OnGUI()
     {
-        player = (PlayerSave)EditorGUILayout.ObjectField(player, typeof(PlayerSave),true);
-
-        if (GUI.changed == true)
+        if (GUI.Button(buttonRect, "Load Path"))
         {
-            InitiatePlayer();
+            jsonPath = EditorUtility.OpenFolderPanel("Choose DebugDeta Path", Application.dataPath, "");
+
+            //Only add the files that end with .json
+            string[] dataFiles = Directory.GetFiles(jsonPath);
+            for (int i = 0; i < dataFiles.Length; i++)
+            {
+                if (dataFiles[i].EndsWith(".json"))
+                {
+                    jsonFiles.Add(dataFiles[i]);
+                }
+            }
+
+            CreateDebugLines();
+            //Debug.Log(jsonFile);
+            //LoadJsonFile(jsonFiles[0]);
+
+            //TODO: add menu for choosing files
         }
+    }
+
+    private void CreateDebugLines() 
+    {
+        foreach (var file in jsonFiles)
+        {
+            LoadJsonFile(file);
+            CreateSingleLine();
+        }
+    }
+
+    private void CreateSingleLine() 
+    {
+        GameObject gameObject = Instantiate(debugLinePrefab);
+        DebugLine line = gameObject.GetComponent<DebugLine>();
+        if (line != null)
+        {
+            line.Create(currentData);
+            debugLines.Add(line);
+        }
+    }
+
+    private void LoadJsonFile(string jsonFile)
+    {
+        currentFile = File.ReadAllText(jsonFile);
+        currentData = JsonUtility.FromJson<DataHolder>(currentFile);
+    }
+
+    private void OnMenuClick() 
+    {
+    
     }
 
     private void Awake()
@@ -51,34 +99,24 @@ public class ShowPlayerDataTool : EditorWindow
 
     }
 
-    private void SceneGUI(SceneView sceneView) 
+    private void SceneGUI(SceneView sceneView)
     {
-        Handles.BeginGUI();
+        //Handles.BeginGUI();
 
-        if (playerData != null)
-        {
-            for (int i = 0; i < playerData.positions.Count; i++)
-            {
-                if (i + 1 < playerData.positions.Count)
-                {
-                    Debug.DrawLine(playerData.positions[i], playerData.positions[i + 1]);
-                }
-            }
-        }
+        //foreach (var file in jsonFiles)
+        //{
+        //    LoadJsonFile(file);
+        //    CreateSingleLine();
 
-        Handles.EndGUI();
-    }
+        //    for (int i = 0; i < currentData.positions.Count; i++)
+        //    {
+        //        if (i + 1 < currentData.positions.Count)
+        //        {
+        //            Debug.DrawLine(currentData.positions[i], currentData.positions[i + 1]);
+        //        }
+        //    }
+        //}
 
-    private void LoadJsonFile() 
-    {
-        jsonFile = File.ReadAllText(jsonPath);
-        playerData = JsonUtility.FromJson<PlayerData>(jsonFile);
-    }
-
-    private void InitiatePlayer() 
-    {
-        LoadJsonFile();
-        playerStartPosition = player.transform.position;
-        playerPosition = playerStartPosition;
+        //Handles.EndGUI();
     }
 }

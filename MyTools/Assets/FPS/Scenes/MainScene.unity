@@ -403,6 +403,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e44a7cdd45948a744a1fb03a2bda55f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveDatas: []
+  capturesPerSecond: 60
+  capturingData: 0
   player: {fileID: 2729281214152228923}
 --- !u!1 &667004388
 GameObject:
@@ -3243,6 +3246,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af939f054138cf49a1966c39dca39ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2729281214152228924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2729281214152228921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5e89eb1aeead42438524f2030804c53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveHandler: {fileID: 591991663}
+  data:
+    positions: []
+    lookDirections: []
+--- !u!114 &2729281214152228925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2729281214152228921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83e0db7b9fe8d847952956b41b36661, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveHandler: {fileID: 591991663}
+  data:
+    positions: []
+    lookDirections: []
 --- !u!1001 &2729281214182533258
 PrefabInstance:
   m_ObjectHideFlags: 0

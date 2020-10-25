@@ -1,74 +1,111 @@
-﻿using System;
+﻿using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SaveHandler : MonoBehaviour
 {
-    [SerializeField] private PlayerSave player;
-    
-    private PlayerData playerData = new PlayerData();
-    private IUnit unit;
-    private string jsonPath;
-    private string jsonFileName;
+    [SerializeField] private List<SaveDataBaseClass> saveDatas = new List<SaveDataBaseClass>();
+    [SerializeField] float capturesPerSecond = 5.0f;
+    [SerializeField]private bool capturingData = true;
+    [SerializeField] private ReplayPlayerData player;
+
     private string jsonFile;
+
+    public string JsonPath { get; private set; }
+    public string JsonPrefix { get; private set; }
+
+    private DataHolder playerData;
 
     private void Awake()
     {
-        jsonPath = Application.dataPath + "/DebugStats/";
-        jsonFileName = player.name + "_" + DateTime.Now.Second + "_debugStats.json";
-        unit = player.GetComponent<IUnit>();
-        playerData.positions = new List<Vector3>();
-    }
+        JsonPath = Directory.CreateDirectory(Application.dataPath + "/DebugStats/" + SceneManager.GetActiveScene().name + "/").FullName;
+        JsonPrefix = "_" + SceneManager.GetActiveScene().name + "_" + Random.Range(0,10000000) + "_debugStats.json";
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.K))
+        if (capturingData == true)
         {
-            Save();
+            StartCoroutine(AddDataTimer());
         }
-        if (Input.GetKeyDown(KeyCode.L))
+        else
         {
             Load();
         }
     }
 
+    private IEnumerator AddDataTimer() 
+    {
+        WaitForSeconds wait = new WaitForSeconds(1.0f / capturesPerSecond);
+        while (capturingData == true)
+        {
+            OnAddData();
+            yield return wait;
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            OnSave();
+        }
+    }
+
+    private void OnAddData()
+    {
+        foreach (var save in saveDatas)
+        {
+            save.OnAddData();
+        }
+    }
+
+    private void OnSave()
+    {
+        foreach (var save in saveDatas)
+        {
+            save.OnSave();
+        }
+
+        Debug.Log("Saved Json!");
+    }
+
+    public void AddSaveData(SaveDataBaseClass saveData)
+    {
+        saveDatas.Add(saveData);
+    }
+
     private void Save()
     {
-        SaveJsonFile();
-        Debug.Log("Saved pos: " + playerData.positions[playerData.positions.Count - 1]);
+        foreach (var save in saveDatas)
+        {
+            jsonFile = JsonUtility.ToJson(save);
+            File.WriteAllText(JsonPath + JsonPrefix, jsonFile);
+        }
     }
 
     private void Load()
     {
-        LoadJsonFile();
+        LoadFromJsonFile();
         StartCoroutine(MovePlayer());
     }
 
-    IEnumerator MovePlayer() 
+    //TODO: Add this later on
+    IEnumerator MovePlayer()
     {
-        WaitForSeconds timeToWait = new WaitForSeconds(1.0f);
-        foreach (var pos in playerData.positions)
+        WaitForSeconds timeToWait = new WaitForSeconds(1.0f / capturesPerSecond);
+
+        for (int i = 0; i < playerData.positions.Count; i++)
         {
-            player.SetPosition(pos);
-            Debug.Log("Loaded pos: " + pos);
+            player.SetPosition(playerData.positions[i]);
+            player.SetLookDirection(playerData.lookDirections[i]);
             yield return timeToWait;
         }
     }
 
-    private void LoadJsonFile()
+    private void LoadFromJsonFile()
     {
         //Load
-        jsonFile = File.ReadAllText(jsonPath + jsonFileName);
-        playerData = JsonUtility.FromJson<PlayerData>(jsonFile);
-    }
-
-    private void SaveJsonFile() 
-    {
-        //Save
-        playerData.positions.Add(player.GetPosition());
-        jsonFile = JsonUtility.ToJson(playerData);
-        File.WriteAllText(jsonPath + jsonFileName, jsonFile);
+        jsonFile = File.ReadAllText(Directory.GetFiles(JsonPath)[0]);
+        playerData = JsonUtility.FromJson<DataHolder>(jsonFile);
     }
 }
