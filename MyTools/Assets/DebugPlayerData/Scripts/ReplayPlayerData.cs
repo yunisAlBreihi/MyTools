@@ -2,11 +2,11 @@
 
 public class ReplayPlayerData : MonoBehaviour, IUnit
 {
-    private CharacterController controller;
+    [SerializeField] private CharacterController controller;
 
     private void Awake()
     {
-        controller = GetComponent<CharacterController>();
+        controller = gameObject.GetComponent<CharacterController>();
     }
 
     public Vector3 GetPosition()
