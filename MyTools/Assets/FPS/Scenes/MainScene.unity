@@ -3245,8 +3245,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af939f054138cf49a1966c39dca39ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  capturesPerSecond: 10
-  replayData: {fileID: 11400000, guid: 78b5d210aa9afa84899f73d17c47faa5, type: 2}
 --- !u!114 &2729281214152228924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3262,6 +3260,7 @@ MonoBehaviour:
   saveHandler: {fileID: 591991663}
   uploadData: 1
   data:
+    capturesPerSecond: 0
     positions: []
     lookDirections: []
 --- !u!114 &2729281214152228925
@@ -3279,6 +3278,7 @@ MonoBehaviour:
   saveHandler: {fileID: 591991663}
   uploadData: 1
   data:
+    capturesPerSecond: 0
     positions: []
     lookDirections: []
 --- !u!1001 &2729281214182533258
