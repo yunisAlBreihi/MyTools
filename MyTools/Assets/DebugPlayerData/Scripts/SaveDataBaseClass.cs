@@ -1,12 +1,17 @@
 ﻿using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 
 [Serializable]
 public abstract class SaveDataBaseClass : MonoBehaviour
 {
-    [SerializeField] private SaveHandler saveHandler;
-    public DataHolder data;
+    [SerializeField] private SaveHandler saveHandler = null;
+    [SerializeField] private bool uploadData = true;
+
+    public DataHolder data = null;
+
+    private FTPUploader uploader = new FTPUploader();
 
     protected virtual void Awake()
     {
@@ -45,6 +50,7 @@ public abstract class SaveDataBaseClass : MonoBehaviour
         string jsonFileName = gameObject.name + saveHandler.JsonPrefix;
         string jsonFile = JsonUtility.ToJson(data);
         File.WriteAllText(saveHandler.JsonPath + jsonFileName, jsonFile);
+        uploader.UploadFile(saveHandler.JsonPath + jsonFileName);
     }
 
     public virtual void OnLoad()

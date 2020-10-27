@@ -404,9 +404,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveDatas: []
-  capturesPerSecond: 60
+  capturesPerSecond: 10
   capturingData: 0
-  player: {fileID: 2729281214152228923}
 --- !u!1 &667004388
 GameObject:
   m_ObjectHideFlags: 0
@@ -3166,32 +3165,32 @@ PrefabInstance:
     - target: {fileID: 8746678193447392789, guid: 761cdc9e4e883334cbdcea062d0befa7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.24432945
+      value: 0.2509998
       objectReference: {fileID: 0}
     - target: {fileID: 8746678193447392789, guid: 761cdc9e4e883334cbdcea062d0befa7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.25
+      value: -7.1489997
       objectReference: {fileID: 0}
     - target: {fileID: 8746678193447392789, guid: 761cdc9e4e883334cbdcea062d0befa7,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8746678193447392789, guid: 761cdc9e4e883334cbdcea062d0befa7,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.6158122
+      value: 0.61581224
       objectReference: {fileID: 0}
     - target: {fileID: 8746678193447392789, guid: 761cdc9e4e883334cbdcea062d0befa7,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8746678193447392789, guid: 761cdc9e4e883334cbdcea062d0befa7,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.78789306
+      value: 0.787893
       objectReference: {fileID: 0}
     - target: {fileID: 8746678193447392789, guid: 761cdc9e4e883334cbdcea062d0befa7,
         type: 3}
@@ -3247,6 +3246,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 2729281214152228930}
+  capturesPerSecond: 10
+  replayData: {fileID: 11400000, guid: 78b5d210aa9afa84899f73d17c47faa5, type: 2}
 --- !u!114 &2729281214152228924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3260,6 +3261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveHandler: {fileID: 591991663}
+  uploadData: 1
   data:
     positions: []
     lookDirections: []
@@ -3276,6 +3278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveHandler: {fileID: 591991663}
+  uploadData: 1
   data:
     positions: []
     lookDirections: []
@@ -4951,6 +4954,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1315839542190839936, guid: c996b53e9f849234393d1e90f68d1679,
+        type: 3}
+      propertyPath: saveHandler
+      value: 
+      objectReference: {fileID: 591991663}
     - target: {fileID: 1315839542190839937, guid: c996b53e9f849234393d1e90f68d1679,
         type: 3}
       propertyPath: m_LocalPosition.x

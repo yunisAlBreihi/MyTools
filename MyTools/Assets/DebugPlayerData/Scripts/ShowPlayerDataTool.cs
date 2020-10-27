@@ -4,10 +4,14 @@ using UnityEditor;
 using UnityEngine;
 using System.IO;
 
+#if(UNITY_EDITOR)
 public class ShowPlayerDataTool : EditorWindow
 {
+    [SerializeField] private ReplayDataScriptable replayData;
+
     private List<DebugLine> debugLines = new List<DebugLine>();
     private List<DataHolder> dataHolders = new List<DataHolder>();
+    private List<string> dataNames = new List<string>();
     private List<float> lineDistances = new List<float>();
     private List<string> jsonFiles = new List<string>();
     private DataHolder currentData = null;
@@ -18,14 +22,21 @@ public class ShowPlayerDataTool : EditorWindow
     private string jsonPath = "";
 
     private int positionDelta = 0;
+    private int popUpIndex = 0;
 
-    private Rect sliderRect = new Rect(10, 50, 500, 20);
     private Rect buttonRect = new Rect(10, 10, 100, 20);
+    private Rect popUpRect = new Rect(10, 30, 100, 10);
+    private Rect popUpButtonRect = new Rect(130, 29, 100, 20);
+    private Rect sliderRect = new Rect(10, 60, 500, 20);
+    private Rect replayDataRect = new Rect(10, 100, 200, 20);
+    private Rect replayButtonRect = new Rect(220, 100, 100, 20);
+
+    static ShowPlayerDataTool window = null;
 
     [MenuItem("Tools/ShowPlayerData")]
     static void Init()
     {
-        ShowPlayerDataTool window = (ShowPlayerDataTool)EditorWindow.GetWindow(typeof(ShowPlayerDataTool));
+        window = (ShowPlayerDataTool)EditorWindow.GetWindow(typeof(ShowPlayerDataTool));
         window.Show();
     }
 
@@ -40,15 +51,7 @@ public class ShowPlayerDataTool : EditorWindow
     private void OnDisable()
     {
         SceneView.duringSceneGui -= SceneGUI;
-
-        //Destroy the used objects when closing the window
-        foreach (var debugLine in debugLines)
-        {
-            DestroyImmediate(debugLine.gameObject);
-        }
-        DestroyImmediate(debugCamera);
-
-        Resources.UnloadUnusedAssets();
+        DestroyDebugObjects();
     }
 
     private void OnGUI()
@@ -60,7 +63,6 @@ public class ShowPlayerDataTool : EditorWindow
             CreateDebugLines();
 
             CreateCamera();
-
 
             //for (int i = 0; i < dataHolders.Count; i++)
             //{
@@ -76,9 +78,37 @@ public class ShowPlayerDataTool : EditorWindow
             //TODO: add menu for choosing files
         }
 
+        if (dataHolders.Count != 0)
+        {
+            popUpIndex = EditorGUI.Popup(popUpRect, popUpIndex, dataNames.ToArray());
+
+            if (GUI.Button(popUpButtonRect, "Select Data"))
+            {
+                SelectData();
+            }
+
+            replayData = (ReplayDataScriptable)EditorGUI.ObjectField(replayDataRect, replayData, typeof(ReplayDataScriptable));
+            if (GUI.Button(replayButtonRect, "Replay Data"))
+            {
+                if (replayData != null)
+                {
+                    replayData.Clear();
+                    StartPlay();
+                }
+                else
+                {
+                    Debug.LogWarning("Select ReplayData first!");
+                }
+            }
+        }
+
         if (currentData != null)
         {
             positionDelta = EditorGUI.IntSlider(sliderRect, positionDelta, 0, currentData.positions.Count - 1);
+            if (positionDelta >= currentData.positions.Count - 1)
+            {
+                positionDelta = currentData.positions.Count - 1;
+            }
         }
 
         if (GUI.changed)
@@ -86,6 +116,31 @@ public class ShowPlayerDataTool : EditorWindow
             MoveCamera(positionDelta);
             Selection.activeObject = debugCamera;
         }
+    }
+
+    private void DestroyDebugObjects() 
+    {
+        //Destroy the used objects when closing the window
+        foreach (var debugLine in debugLines)
+        {
+            DestroyImmediate(debugLine.gameObject);
+        }
+        DestroyImmediate(debugCamera);
+
+        Resources.UnloadUnusedAssets();
+    }
+
+    private void StartPlay()
+    {
+        replayData.StartReplay(currentData);
+        DestroyDebugObjects();
+        window.Close();
+        EditorApplication.isPlaying = true;
+    }
+
+    private void SelectData()
+    {
+        currentData = dataHolders[popUpIndex];
     }
 
     private void CreateCamera()
@@ -107,11 +162,15 @@ public class ShowPlayerDataTool : EditorWindow
 
         //Only add the files that end with .json
         string[] dataFiles = Directory.GetFiles(jsonPath);
+        int nameIndex = 0;
+
         for (int i = 0; i < dataFiles.Length; i++)
         {
             if (dataFiles[i].EndsWith(".json"))
             {
+                nameIndex++;
                 jsonFiles.Add(dataFiles[i]);
+                dataNames.Add("Data" + nameIndex);
             }
         }
     }
@@ -174,3 +233,4 @@ public class ShowPlayerDataTool : EditorWindow
         //Handles.EndGUI();
     }
 }
+#endif

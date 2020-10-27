@@ -25,6 +25,7 @@ public class GameFlowManager : MonoBehaviour
     [Tooltip("This string has to be the name of the scene you want to load when losing")]
     public string loseSceneName = "LoseScene";
 
+    [SerializeField] private SaveHandler saveHandler = null;
 
     public bool gameIsEnding { get; private set; }
 
@@ -74,6 +75,8 @@ public class GameFlowManager : MonoBehaviour
 
     void EndGame(bool win)
     {
+        saveHandler.OnSave();
+
         // unlocks the cursor before leaving the scene, to be able to click buttons
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
