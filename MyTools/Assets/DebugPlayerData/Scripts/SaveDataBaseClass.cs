@@ -50,7 +50,7 @@ public abstract class SaveDataBaseClass : MonoBehaviour
         string jsonFileName = gameObject.name + saveHandler.JsonPrefix;
         string jsonFile = JsonUtility.ToJson(data);
         File.WriteAllText(saveHandler.JsonPath + jsonFileName, jsonFile);
-        uploader.UploadFile(saveHandler.JsonPath + jsonFileName);
+        //uploader.UploadFile(saveHandler.JsonPath + jsonFileName);
     }
 
     public virtual void OnLoad()
