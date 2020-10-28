@@ -403,9 +403,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e44a7cdd45948a744a1fb03a2bda55f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveDatas: []
   capturesPerSecond: 10
-  capturingData: 0
+  capturingData: 1
 --- !u!1 &667004388
 GameObject:
   m_ObjectHideFlags: 0
@@ -3257,8 +3256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5e89eb1aeead42438524f2030804c53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveHandler: {fileID: 591991663}
-  uploadData: 1
+  uploadToFTPServer: 0
   data:
     capturesPerSecond: 0
     positions: []
@@ -3275,8 +3273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a83e0db7b9fe8d847952956b41b36661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveHandler: {fileID: 591991663}
-  uploadData: 1
+  uploadToFTPServer: 0
   data:
     capturesPerSecond: 0
     positions: []

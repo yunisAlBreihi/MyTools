@@ -25,8 +25,6 @@ public class GameFlowManager : MonoBehaviour
     [Tooltip("This string has to be the name of the scene you want to load when losing")]
     public string loseSceneName = "LoseScene";
 
-    [SerializeField] private SaveHandler saveHandler = null;
-
     public bool gameIsEnding { get; private set; }
 
     PlayerCharacterController m_Player;
@@ -34,6 +32,20 @@ public class GameFlowManager : MonoBehaviour
     ObjectiveManager m_ObjectiveManager;
     float m_TimeLoadEndGameScene;
     string m_SceneToLoad;
+
+    private SaveHandler saveHandler = null;
+
+    private void Awake()
+    {
+        if (saveHandler == null)
+        {
+            saveHandler = FindObjectOfType<SaveHandler>();
+            if (saveHandler == null)
+            {
+                Debug.LogError("You need a SaveHandler in the world!");
+            }
+        }
+    }
 
     void Start()
     {
