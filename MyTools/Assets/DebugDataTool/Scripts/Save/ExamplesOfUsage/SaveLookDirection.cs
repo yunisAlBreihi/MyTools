@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class SaveLookDirectionData : SaveDataBaseClass
+public class SaveLookDirection : SaveDataBaseClass
 {
     Camera cam = null;
 
@@ -12,6 +12,6 @@ public class SaveLookDirectionData : SaveDataBaseClass
 
     public override void OnAddData()
     {
-        data.lookDirections.Add(transform.forward + cam.transform.forward);
+        data.lookDirections.Add(cam.transform.forward);
     }
 }

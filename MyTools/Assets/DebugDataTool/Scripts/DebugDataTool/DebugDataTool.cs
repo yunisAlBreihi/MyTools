@@ -135,13 +135,11 @@ public class DebugDataTool : EditorWindow
                     {
                         SelectData(dropDownIndex);
                         lastDropDownIndex = dropDownIndex;
-                        Debug.Log("Changed Cam pos");
                     }
 
                     if (positionIndex != lastPositionIndex)
                     {
                         lastPositionIndex = positionIndex;
-                        Debug.Log("Changed position index");
                     }
                     MoveCamera(positionIndex);
                     Selection.activeObject = debugCamera;
@@ -193,7 +191,7 @@ public class DebugDataTool : EditorWindow
     private void MoveCamera(int index)
     {
         debugCamera.transform.position = currentDebugHolder.dataHolder.positions[index] + cameraOffset;
-        debugCamera.transform.rotation = Quaternion.LookRotation(currentDebugHolder.dataHolder.lookDirections[index]);
+        debugCamera.transform.forward = currentDebugHolder.dataHolder.lookDirections[index];
     }
     #endregion Camera
 
